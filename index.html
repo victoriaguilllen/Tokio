@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>東京 · Tokio · Pablo & Victoria</title>
+<style>
+:root{
+  --aka:#b11226;
+  --aka-deep:#6f0d16;
+  --sumi:#16110f;
+  --sumi-soft:#342722;
+  --kin:#c69a42;
+  --kin-soft:#e7d1a1;
+  --washi:#f6efe2;
+  --paper:#fffaf0;
+  --ink-muted:#746559;
+  --line:#d7c3a0;
+  --shadow:rgba(22,17,15,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;
+  color:var(--sumi);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(177,18,38,.18), transparent 28%),
+    radial-gradient(circle at 85% 18%, rgba(198,154,66,.16), transparent 24%),
+    linear-gradient(135deg,#f7efe2 0%,#efe0c7 100%);
+  font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",Georgia,serif;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.24;
+  background-image:
+    linear-gradient(45deg, rgba(111,13,22,.10) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(111,13,22,.10) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(111,13,22,.10) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(111,13,22,.10) 75%);
+  background-size:32px 32px;
+  background-position:0 0,0 16px,16px -16px,-16px 0;
+}
+.app{position:relative;z-index:1}
+.cover{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:48px 28px;
+  background:
+    linear-gradient(120deg, rgba(111,13,22,.96), rgba(177,18,38,.88)),
+    repeating-linear-gradient(90deg, transparent 0 18px, rgba(255,255,255,.06) 18px 20px);
+  color:var(--paper);
+  overflow:hidden;
+  position:relative;
+}
+.cover::before{
+  content:"東京";
+  position:absolute;
+  font-size:24vw;
+  line-height:.8;
+  letter-spacing:-.08em;
+  color:rgba(255,250,240,.055);
+  top:4vh;
+  right:-3vw;
+  writing-mode:vertical-rl;
+  font-weight:900;
+}
+.cover::after{
+  content:"";
+  position:absolute;
+  width:420px;height:420px;
+  border:2px solid rgba(231,209,161,.45);
+  border-radius:50%;
+  left:-120px;bottom:-130px;
+  box-shadow:0 0 0 28px rgba(231,209,161,.08),0 0 0 56px rgba(231,209,161,.04);
+}
+.cover-inner{
+  width:min(1120px,100%);
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  gap:56px;
+  align-items:center;
+  position:relative;
+}
+.mon{
+  width:150px;height:150px;
+  border:2px solid var(--kin-soft);
+  display:grid;
+  place-items:center;
+  color:var(--kin-soft);
+  font-size:72px;
+  margin-bottom:34px;
+  transform:rotate(45deg);
+}
+.mon span{transform:rotate(-45deg)}
+.cover h1{
+  font-size:clamp(4.5rem,13vw,10rem);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  line-height:.86;
+  text-shadow:8px 8px 0 rgba(22,17,15,.25);
+}
+.cover .jp{
+  color:var(--kin-soft);
+  font-size:clamp(2.1rem,5vw,4.2rem);
+  letter-spacing:.32em;
+  margin-bottom:16px;
+}
+.cover .names{
+  margin-top:30px;
+  display:inline-block;
+  border-top:1px solid rgba(231,209,161,.65);
+  border-bottom:1px solid rgba(231,209,161,.65);
+  padding:16px 4px;
+  font-size:clamp(1.2rem,2.3vw,2rem);
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+.cover-card{
+  background:rgba(255,250,240,.94);
+  color:var(--sumi);
+  padding:38px;
+  border:1px solid var(--kin);
+  box-shadow:18px 18px 0 rgba(22,17,15,.30);
+  position:relative;
+}
+.cover-card::before{
+  content:"旅";
+  position:absolute;
+  right:26px;
+  top:20px;
+  color:rgba(177,18,38,.12);
+  font-size:120px;
+  line-height:1;
+}
+.cover-card h2{
+  font-size:2rem;
+  color:var(--aka);
+  margin-bottom:24px;
+  position:relative;
+}
+.cover-card p{
+  line-height:1.9;
+  font-size:1.05rem;
+  color:var(--sumi-soft);
+  position:relative;
+}
+.cover-meta{margin-top:30px;display:grid;gap:12px;position:relative}
+.meta-row{
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  border-bottom:1px solid var(--line);
+  padding-bottom:10px;
+}
+.meta-row b{color:var(--aka);font-weight:700}
+.tabs{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:var(--sumi);
+  border-bottom:4px solid var(--aka);
+  box-shadow:0 10px 30px var(--shadow);
+}
+.tab-btn{
+  border:0;
+  cursor:pointer;
+  color:var(--paper);
+  background:transparent;
+  padding:20px 10px 18px;
+  font-family:inherit;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  transition:.25s ease;
+  border-right:1px solid rgba(255,250,240,.12);
+}
+.tab-btn span{display:block}
+.tab-btn .kanji{font-size:1.25rem;color:var(--kin-soft);margin-bottom:4px}
+.tab-btn.active,.tab-btn:hover{background:var(--aka)}
+.panel{
+  display:none;
+  min-height:calc(100vh - 76px);
+  padding:56px clamp(18px,6vw,88px) 80px;
+}
+.panel.active{display:block}
+.day-head{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:28px;
+  align-items:end;
+  margin-bottom:48px;
+}
+.day-num{
+  font-size:clamp(5rem,11vw,9rem);
+  color:var(--aka);
+  line-height:.8;
+  font-weight:900;
+  letter-spacing:-.06em;
+}
+.day-title h2{
+  font-size:clamp(2.1rem,4vw,4.2rem);
+  line-height:1;
+  color:var(--sumi);
+  margin-bottom:14px;
+}
+.day-title p{
+  color:var(--ink-muted);
+  font-size:1.05rem;
+  letter-spacing:.08em;
+  line-height:1.6;
+}
+.day-title::after{
+  content:"";
+  display:block;
+  height:3px;
+  width:min(620px,100%);
+  background:linear-gradient(90deg,var(--aka),var(--kin),transparent);
+  margin-top:22px;
+}
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 330px;
+  gap:46px;
+  align-items:start;
+}
+.timeline{position:relative;padding-left:38px}
+.timeline::before{
+  content:"";
+  position:absolute;
+  left:9px;
+  top:4px;
+  bottom:8px;
+  width:2px;
+  background:linear-gradient(var(--aka),var(--kin),var(--aka-deep));
+}
+.item{
+  position:relative;
+  background:rgba(255,250,240,.94);
+  border:1px solid var(--line);
+  border-left:5px solid var(--aka);
+  padding:24px 26px;
+  margin-bottom:22px;
+  box-shadow:8px 8px 0 rgba(111,13,22,.08);
+}
+.item::before{
+  content:"";
+  position:absolute;
+  left:-43px;
+  top:28px;
+  width:18px;height:18px;
+  background:var(--paper);
+  border:4px solid var(--aka);
+  transform:rotate(45deg);
+}
+.time{
+  font-size:.88rem;
+  letter-spacing:.16em;
+  color:var(--aka);
+  font-weight:700;
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+.place{
+  font-size:1.55rem;
+  color:var(--sumi);
+  margin-bottom:10px;
+  line-height:1.25;
+}
+.note{color:#51463e;line-height:1.75;font-size:1rem}
+.links{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px}
+.links a{
+  color:var(--paper);
+  background:var(--aka);
+  text-decoration:none;
+  padding:8px 13px;
+  font-size:.86rem;
+  letter-spacing:.06em;
+  border:1px solid var(--aka-deep);
+  transition:.2s;
+}
+.links a:hover{background:var(--sumi)}
+.side{
+  position:sticky;
+  top:106px;
+  background:rgba(255,250,240,.9);
+  border:1px solid var(--line);
+  padding:24px;
+  box-shadow:10px 10px 0 rgba(22,17,15,.08);
+}
+.side h3{color:var(--aka);font-size:1.25rem;margin-bottom:16px;letter-spacing:.08em}
+.side ul{list-style:none;display:grid;gap:14px}
+.side li{
+  border-bottom:1px solid var(--line);
+  padding-bottom:12px;
+  line-height:1.55;
+  color:#51463e;
+}
+.side b{color:var(--sumi)}
+.alert{
+  background:#f4e6cf;
+  border-left:4px solid var(--kin);
+  padding:14px 16px;
+  margin-top:12px;
+  line-height:1.6;
+  color:#4d3c2c;
+}
+footer{
+  text-align:center;
+  padding:44px;
+  color:var(--ink-muted);
+  border-top:1px solid var(--line);
+}
+@media(max-width:900px){
+  .cover-inner{grid-template-columns:1fr}
+  .cover-card{box-shadow:10px 10px 0 rgba(22,17,15,.25)}
+  .tabs{grid-template-columns:1fr 1fr}
+  .layout{grid-template-columns:1fr}
+  .side{position:relative;top:auto}
+  .day-head{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <section class="cover">
+    <div class="cover-inner">
+      <div>
+        <div class="mon"><span>東</span></div>
+        <div class="jp">東京旅行</div>
+        <h1>Tokyo</h1>
+        <div class="names">Pablo & Victoria</div>
+      </div>
+      <div class="cover-card">
+        <h2>Guía de domingo, lunes y martes</h2>
+        <p>Ruta por Tokio con templos, barrios con vida, cafés cerca de cada zona, comida japonesa y noches de callejones iluminados.</p>
+        <div class="cover-meta">
+          <div class="meta-row"><b>Hoy</b><span>Shibuya + cruce</span></div>
+          <div class="meta-row"><b>Domingo</b><span>Asakusa → Ueno → Akihabara → Ginza → Shinjuku</span></div>
+          <div class="meta-row"><b>Lunes</b><span>Daikanyama → Omotesando → Shibuya</span></div>
+          <div class="meta-row"><b>Martes</b><span>mañana breve / pausa</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab-btn active" onclick="openTab(0)"><span class="kanji">表</span><span>Portada</span></button>
+    <button class="tab-btn" onclick="openTab(1)"><span class="kanji">日</span><span>Domingo</span></button>
+    <button class="tab-btn" onclick="openTab(2)"><span class="kanji">月</span><span>Lunes</span></button>
+    <button class="tab-btn" onclick="openTab(3)"><span class="kanji">火</span><span>Martes</span></button>
+  </nav>
+
+  <main>
+    <section class="panel active">
+      <div class="day-head">
+        <div class="day-num">旅</div>
+        <div class="day-title">
+          <h2>Tokio para Pablo & Victoria</h2>
+          <p>Planning actualizado sin meriendas forzadas, con desayunos cerca del primer destino y tardes más de paseo/visita.</p>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="timeline">
+          <div class="item">
+            <div class="time">Criterio</div>
+            <div class="place">Menos cafés sueltos, más ciudad</div>
+            <div class="note">He dejado los cafés como descanso útil o desayuno cercano, no como parada obligatoria. Las tardes tienen más barrio, paseo y visita.</div>
+          </div>
+          <div class="item">
+            <div class="time">Hoy</div>
+            <div class="place">Shibuya sin repetir demasiado</div>
+            <div class="note">Como hoy vais al cruce y a pasear por Shibuya, el lunes por la noche queda para Nonbei Yokocho y ambiente izakaya.</div>
+          </div>
+          <div class="item">
+            <div class="time">Aviso útil</div>
+            <div class="place">Kyu Asakura House</div>
+            <div class="note">Está muy bien metida antes de Omotesando por estilo y contraste. Revisad horario antes de ir, porque los espacios históricos pueden cerrar algún día concreto.</div>
+          </div>
+        </div>
+        <aside class="side">
+          <h3>Claves</h3>
+          <ul>
+            <li><b>Domingo:</b> ruta larga pero lógica, casi en línea.</li>
+            <li><b>Lunes:</b> día más elegante: Daikanyama, Omotesando y Shibuya noche.</li>
+            <li><b>Martes:</b> lo dejo en pausa, sin cargarlo.</li>
+            <li><b>Matcha:</b> solo cuando esté cerca y tenga sentido.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="day-head">
+        <div class="day-num">01</div>
+        <div class="day-title">
+          <h2>Domingo · Asakusa, Ueno, Akihabara, Ginza & Shinjuku</h2>
+          <p>Templo temprano, paseo clásico, anime, tonkatsu y noche de callejones.</p>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="timeline">
+          <div class="item"><div class="time">07:30</div><div class="place">Levantarse</div><div class="note">Salida sin prisa, pero intentando llegar pronto a Asakusa. Tenéis unos 25 min de metro + 25 min andando.</div></div>
+
+          <div class="item">
+            <div class="time">08:30</div>
+            <div class="place">Desayuno cerca de Asakusa · Benizuru Pancake</div>
+            <div class="note">Buena opción si os apetece desayuno especial antes del templo. Si hay mucha cola o queréis algo más rápido, coged café/to go por Asakusa para no perder la mañana.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=Benizuru+Pancake+Asakusa+Tokyo" target="_blank">Benizuru Pancake</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=cafe+near+Sensoji+Temple+Tokyo" target="_blank">Cafés cerca</a>
+            </div>
+            <div class="alert">Plan B rápido: café + bollería por Asakusa y Benizuru solo si lo veis cómodo.</div>
+          </div>
+
+          <div class="item">
+            <div class="time">09:30</div>
+            <div class="place">Asakusa · Sensō-ji</div>
+            <div class="note">Templo, Kaminarimon, Nakamise-dori y calles laterales. Es mejor hacerlo temprano para evitar el pico de gente.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=Sensoji+Temple+Tokyo" target="_blank">Sensō-ji</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=Nakamise-dori+Asakusa" target="_blank">Nakamise</a>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="time">10:30</div>
+            <div class="place">Calles de Asakusa + Hoppy Street</div>
+            <div class="note">Antes de ir a Ueno, dad un paseo por calles más pequeñas y por Hoppy Street. Tiene ambiente retro, local y muy distinto a la avenida principal.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=Hoppy+Street+Asakusa+Tokyo" target="_blank">Hoppy Street</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=Asakusa+Tokyo" target="_blank">Asakusa</a>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="time">11:00</div>
+            <div class="place">Camino andando a Ueno Park</div>
+            <div class="note">Unos 25 minutos andando. Buen tramo para ver un Tokio más cotidiano entre zonas muy turísticas.</div>
+            <div class="links"><a href="https://www.google.com/maps/search/?api=1&query=Ueno+Park+Tokyo" target="_blank">Ueno Park</a></div>
+          </div>
+
+          <div class="item">
+            <div class="time">11:25</div>
+            <div class="place">Ueno Park + Ameyoko</div>
+            <div class="note">Paseo por el parque y, si os apetece más ambiente, bajad a Ameyoko: mercado, tiendas, comida callejera y calles bajo las vías.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=Ueno+Park+Tokyo" target="_blank">Ueno Park</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=Ameyoko+Tokyo" target="_blank">Ameyoko</a>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="time">12:15</div>
+            <div class="place">Andando a Akihabara</div>
+            <div class="note">Unos 18 minutos. Id directos a la zona de tiendas y recreativas para aprovechar una visita corta.</div>
+            <div class="links"><a href="https://www.google.com/maps/search/?api=1&query=Akihabara+Tokyo" target="_blank">Akihabara</a></div>
+          </div>
+
+          <div class="item">
+            <div class="time">12:35</div>
+            <div class="place">Akihabara express</div>
+            <div class="note">Anime, gachapon, arcades y tiendas tipo Mandarake o Radio Kaikan. Es visita breve, así que entrad solo en lo que os llame.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=Radio+Kaikan+Akihabara" target="_blank">Radio Kaikan</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=Mandarake+Akihabara" target="_blank">Mandarake</a>
+            </div>
+          </div>
+
+          <div class="item"><div class="time">13:00</div><div class="place">Salir hacia Ginza</div><div class="note">Traslado para comer en Tonkatsu Marushichi de Ginza.</div></div>
+
+          <div class="item">
+            <div class="time">13:30</div>
+            <div class="place">Comida · Tonkatsu Marushichi Ginza</div>
+            <div class="note">Comida fuerte y muy buena. Encaja genial tras una mañana de caminar.</div>
+            <div class="links"><a href="https://www.google.com/maps/search/?api=1&query=Tonkatsu+Marushichi+Ginza+Tokyo" target="_blank">Google Maps</a></div>
+          </div>
+
+          <div class="item">
+            <div class="time">15:00</div>
+            <div class="place">Ginza + UNIQLO Ginza</div>
+            <div class="note">Paseo suave después de comer. Como ya habéis ido a Ginza, lo dejaría en compras concretas: UNIQLO, alguna tienda bonita y descanso.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=UNIQLO+Ginza+Tokyo" target="_blank">UNIQLO Ginza</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=Ginza+Tokyo" target="_blank">Ginza</a>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="time">16:15</div>
+            <div class="place">Café + descanso en Ginza</div>
+            <div class="note">Parada funcional, no merienda larga. Café tranquilo para recuperar antes de ir a Shinjuku. Si queréis algo cercano, buscad Blue Bottle o café specialty en Ginza.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=Blue+Bottle+Coffee+Ginza+Tokyo" target="_blank">Blue Bottle Ginza</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=specialty+coffee+Ginza+Tokyo" target="_blank">Café en Ginza</a>
+            </div>
+          </div>
+
+          <div class="item"><div class="time">17:15</div><div class="place">Metro hacia Shinjuku</div><div class="note">Calculad unos 45 minutos con margen.</div><div class="links"><a href="https://www.google.com/maps/search/?api=1&query=Shinjuku+Tokyo" target="_blank">Shinjuku</a></div></div>
+
+          <div class="item">
+            <div class="time">18:15</div>
+            <div class="place">Shinjuku · neones y paseo</div>
+            <div class="note">Pasead por la zona de neones, Kabukicho y alrededores antes de cenar. Es el momento en el que Shinjuku luce más.</div>
+            <div class="links"><a href="https://www.google.com/maps/search/?api=1&query=Kabukicho+Shinjuku+Tokyo" target="_blank">Kabukicho</a></div>
+          </div>
+
+          <div class="item">
+            <div class="time">19:30</div>
+            <div class="place">Omoide Yokocho</div>
+            <div class="note">Cena informal o picoteo: yakitori, cerveza, sake y callejones clásicos. Perfecto como final de día.</div>
+            <div class="links"><a href="https://www.google.com/maps/search/?api=1&query=Omoide+Yokocho+Tokyo" target="_blank">Omoide Yokocho</a></div>
+          </div>
+        </div>
+
+        <aside class="side">
+          <h3>Notas domingo</h3>
+          <ul>
+            <li><b>Benizuru:</b> puede requerir espera; si veis cola, no sacrifiquéis Sensō-ji temprano.</li>
+            <li><b>Ameyoko:</b> lo metería sí o sí entre Ueno y Akihabara.</li>
+            <li><b>Akihabara:</b> visita express, no intentéis verlo todo.</li>
+            <li><b>Ginza:</b> como ya habéis ido, enfocarlo en UNIQLO + descanso.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="day-head">
+        <div class="day-num">02</div>
+        <div class="day-title">
+          <h2>Lunes · Kyu Asakura, Omotesando, Menchirashi & Nonbei</h2>
+          <p>Día elegante: casa tradicional, arquitectura, tiendas bonitas y noche de izakayas en Shibuya.</p>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="timeline">
+          <div class="item"><div class="time">07:30</div><div class="place">Levantarse</div><div class="note">Salida hacia Daikanyama / Kyu Asakura House. Calculad unos 45 minutos de metro.</div></div>
+
+          <div class="item">
+            <div class="time">08:15</div>
+            <div class="place">Desayuno de camino o cerca de Daikanyama</div>
+            <div class="note">Mejor algo práctico cerca del primer destino. Buscad café + bollería por Daikanyama si no queréis desviaros. Si os apetece algo más especial, Counter Books puede encajar según ubicación.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=cafe+Daikanyama+Tokyo" target="_blank">Cafés Daikanyama</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=Counter+Books+Tokyo" target="_blank">Counter Books</a>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="time">10:00</div>
+            <div class="place">Kyu Asakura House</div>
+            <div class="note">Casa tradicional japonesa con jardín, muy buen contraste con el Tokio moderno. Id al abrir si podéis.</div>
+            <div class="links"><a href="https://www.google.com/maps/search/?api=1&query=Kyu+Asakura+House+Tokyo" target="_blank">Google Maps</a></div>
+            <div class="alert">Revisad horario antes de ir: si justo estuviera cerrado, cambiadlo por paseo Daikanyama + Tsutaya Books.</div>
+          </div>
+
+          <div class="item">
+            <div class="time">11:15</div>
+            <div class="place">Daikanyama paseo</div>
+            <div class="note">Zona bonita para tiendas pequeñas, calles tranquilas y estética más local. Si os apetece, Daikanyama T-Site / Tsutaya Books es muy buen extra.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=Daikanyama+Tokyo" target="_blank">Daikanyama</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=Daikanyama+T-Site+Tokyo" target="_blank">T-Site</a>
+            </div>
+          </div>
+
+          <div class="item"><div class="time">12:00</div><div class="place">Moverse hacia Omotesando</div><div class="note">Traslado corto para enlazar con tiendas, arquitectura y paseo antes de comer.</div></div>
+
+          <div class="item">
+            <div class="time">12:30</div>
+            <div class="place">Omotesando + Aoyama</div>
+            <div class="note">Pasead por Omotesando Avenue, Cat Street si os apetece, y Aoyama para una zona más elegante y menos caótica. Mirad escaparates, arquitectura y tiendas de diseño.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=Omotesando+Tokyo" target="_blank">Omotesando</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=Aoyama+Tokyo" target="_blank">Aoyama</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=Cat+Street+Tokyo" target="_blank">Cat Street</a>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="time">13:45</div>
+            <div class="place">Comida · Menchirashi</div>
+            <div class="note">Muy buena opción para comer en la zona. Después podéis seguir paseando sin cambiar de barrio rápidamente.</div>
+            <div class="links"><a href="https://www.google.com/maps/search/?api=1&query=Menchirashi+Tokyo" target="_blank">Menchirashi</a></div>
+          </div>
+
+          <div class="item">
+            <div class="time">15:15</div>
+            <div class="place">Tarde por Omotesando / Harajuku tranquilo</div>
+            <div class="note">Sin merienda obligatoria: pasead por Cat Street, Takeshita solo si os apetece verla, y zonas laterales más bonitas. Si Victoria quiere matcha, Cloud Club Matcha o The Matcha Tokyo solo si os quedan cerca.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=Cloud+Club+Matcha+Tokyo" target="_blank">Cloud Club Matcha</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=The+Matcha+Tokyo+Omotesando" target="_blank">The Matcha Tokyo</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=Harajuku+Tokyo" target="_blank">Harajuku</a>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="time">17:30</div>
+            <div class="place">Miyashita Park / vuelta hacia Shibuya</div>
+            <div class="note">Buen puente entre Omotesando-Harajuku y Shibuya. Tiene tiendas, terrazas y ambiente de tarde-noche.</div>
+            <div class="links"><a href="https://www.google.com/maps/search/?api=1&query=Miyashita+Park+Tokyo" target="_blank">Miyashita Park</a></div>
+          </div>
+
+          <div class="item">
+            <div class="time">19:30</div>
+            <div class="place">Shibuya · Nonbei Yokocho</div>
+            <div class="note">Izakaya hopping: yakitori, sake o cerveza. La gracia es ir sin cena formal y picar en varios sitios pequeños.</div>
+            <div class="links"><a href="https://www.google.com/maps/search/?api=1&query=Shibuya+Nonbei+Yokocho+Tokyo" target="_blank">Nonbei Yokocho</a></div>
+          </div>
+        </div>
+
+        <aside class="side">
+          <h3>Notas lunes</h3>
+          <ul>
+            <li><b>Gotokuji:</b> lo dejaría fuera; rompe la ruta y añade mucho transporte.</li>
+            <li><b>Isshin Daikanyama:</b> alternativa si cambiáis Menchirashi por comer en Daikanyama.</li>
+            <li><b>Pizza Marumo:</b> solo si os cansáis de japonés; no la metería en este planning.</li>
+            <li><b>Matcha:</b> no lo fuerces; mejor si queda cerca de Omotesando.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="day-head">
+        <div class="day-num">03</div>
+        <div class="day-title">
+          <h2>Martes · Mañana en pausa</h2>
+          <p>Sin cargar el día: desayuno, paseo mínimo y margen para maletas.</p>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="timeline">
+          <div class="item">
+            <div class="time">08:00</div>
+            <div class="place">Desayuno cerca del alojamiento</div>
+            <div class="note">No cruzaría Tokio. Elegid café cercano, algo de bollería o salado y listo. Si hay Blue Bottle o Glass Coffee cerca, perfecto.</div>
+            <div class="links">
+              <a href="https://www.google.com/maps/search/?api=1&query=Blue+Bottle+Coffee+Tokyo" target="_blank">Blue Bottle</a>
+              <a href="https://www.google.com/maps/search/?api=1&query=Glass+Coffee+Tokyo" target="_blank">Glass Coffee</a>
+            </div>
+          </div>
+          <div class="item"><div class="time">09:00</div><div class="place">Paseo breve opcional</div><div class="note">Solo si os apetece: callejear cerca del alojamiento o repetir una zona que os haya gustado. Nada de planes largos.</div></div>
+          <div class="item"><div class="time">10:00</div><div class="place">Volver / recoger maletas</div><div class="note">Dejad margen para transporte, compras pequeñas y no ir corriendo.</div></div>
+        </div>
+        <aside class="side">
+          <h3>Martes</h3>
+          <ul>
+            <li><b>Modo:</b> pausa.</li>
+            <li><b>Objetivo:</b> no alejarse.</li>
+            <li><b>Plan realista:</b> café, paseo corto y maletas.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer>東京 · Pablo & Victoria · guía actualizada</footer>
+</div>
+
+<script>
+const panels = document.querySelectorAll('.panel');
+const buttons = document.querySelectorAll('.tab-btn');
+function openTab(index){
+  panels.forEach(p => p.classList.remove('active'));
+  buttons.forEach(b => b.classList.remove('active'));
+  panels[index].classList.add('active');
+  buttons[index].classList.add('active');
+  window.scrollTo({top: document.querySelector('.tabs').offsetTop, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
